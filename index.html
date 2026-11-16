@@ -1,154 +1,745 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evergaster - Portafolio</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Everardo García Romero — software de escritorio, Rust, Wayland</title>
+<meta name="description" content="Portafolio de Everardo García Romero (evergaster): shell de escritorio en Rust, shaders para Wayland, reconstrucción de formatos binarios y herramientas para Linux.">
+<meta name="author" content="Everardo García Romero">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0b0c'/%3E%3Ctext x='16' y='23' font-family='monospace' font-size='20' fill='%23e0aa4b' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css?v=11">
+<link rel="preload" href="assets/fonts/space-grotesk.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/space-mono.woff" as="font" type="font/woff" crossorigin>
+<script>
+  // Aplica el tema guardado antes del primer pintado (evita el destello claro).
+  try { const t = localStorage.getItem('tema'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-    <!-- Header/Hero Section -->
-    <div class="max-w-4xl mx-auto p-6 space-y-8">
-        <!-- Perfil -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
-            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-                <div class="shrink-0">
-                    <img class="h-24 w-24 rounded-full border-4 border-blue-100 dark:border-blue-900" src="/img/shinji.webp" alt="Evergaster">
-                </div>
-                <div class="text-center md:text-left">
-                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Evergaster</h1>
-                    <h2 class="text-xl text-blue-600 dark:text-blue-400 font-medium mb-3">Estudiante de Ingeniería en Sistemas</h2>
-                    <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        Desarrollando mis habilidades en programación y diseño web en el Tecnológico Superior de Uruapan. 
-                        Manejo tecnologías como C#, Python y JavaScript.
-                    </p>
-                </div>
-            </div>
-        </div>
+<body>
 
-            <!-- Sobre mi -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span class="mr-3">👤</span>
-                Sobre mí
-            </h2>
-            <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                Soy estudiante de Ingeniería en Sistemas en el Instituto Tecnológico, con un enfoque en el desarrollo de software y soluciones tecnológicas innovadoras. A lo largo de mi formación, he adquirido experiencia trabajando con lenguajes como Python, C# y JavaScript, y he aplicado estos conocimientos en proyectos tanto académicos como personales.
-            </p>
-        </div>
+<a class="salto" href="#trabajo">Saltar al contenido</a>
+<div class="progreso" aria-hidden="true"></div>
 
-        <!-- Sección de Proyectos -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span class="mr-3">🚀</span>
-                Proyectos
-            </h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Proyecto 1 -->
-                <div class="border border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-xl p-6 hover:shadow-md transition-all duration-300">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">camino mas corto</h3>
-                        <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs px-2 py-1 rounded-full">Python</span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                        un programa que calcula el camino mas corto entre dos puntos en un grafo.
-                    </p>
-                    <div class="flex space-x-3">
-                        <a href="https://github.com/Evergaster/camino-mas-corto-nodos" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">Ver código</a>
-                    </div>
-                </div>
+<header class="barra">
+  <a class="marca" href="#inicio">
+    <span class="marca-monograma" aria-hidden="true">E</span>
+    <span class="marca-texto">evergaster</span>
+  </a>
+  <nav class="nav" aria-label="Principal">
+    <a href="#trabajo">Trabajo</a>
+    <a href="#abierto">Código abierto</a>
+    <a href="#metodo">Método</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+  <button class="tema" type="button" id="tema" aria-label="Cambiar entre tema claro y oscuro">
+    <svg class="tema-icono tema-sol" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    <svg class="tema-icono tema-luna" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></svg>
+  </button>
+</header>
 
-                <!-- Proyecto 2 -->
-                <div class="border border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-xl p-6 hover:shadow-md transition-all duration-300">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Poisson rust</h3>
-                        <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">Rust</span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                        Implementación del método de Poisson en Rust para resolver ecuaciones diferenciales.
-                    </p>
-                    <div class="flex space-x-3">
-                        <a href="https://github.com/Evergaster/metodo-poisson-en-rust" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">Ver código</a>
-                    </div>
-                </div>
+<main id="inicio">
 
-                <!-- Proyecto 3 -->
-                <div class="border border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-xl p-6 hover:shadow-md transition-all duration-300">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Carta porte</h3>
-                        <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 text-xs px-2 py-1 rounded-full">Python</span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                        Aplicación de escritorio para generar cartas porte electrónicas.
-                    </p>
-                    <div class="flex space-x-3">
-                        <a href="#" onclick="alert('Código no disponible')"  class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">Ver código</a>
-                        <a href="documents/TransporteDoc.exe" class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 text-sm font-medium">Demo</a>
-                    </div>
-                </div>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="titulo">
+    <p class="etiqueta">Rust · Wayland · Linux · gráficos</p>
+    <h1 id="titulo">Escribo el escritorio que&nbsp;uso.</h1>
+    <p class="entrada">
+      Soy Everardo García Romero. Mantengo un shell de escritorio completo en Rust, reconstruyo
+      formatos binarios desde cero y empaqueto lo que uso todos los días. Nada de lo que hay
+      aquí es una maqueta: corre en esta máquina, con el sistema real detrás.
+    </p>
+    <p class="entrada-nota">
+      <span class="mono">Void / CachyOS · Wayland · compositor Umbriel</span>
+    </p>
 
-                <!-- Proyecto 4 -->
-                <div class="border border-gray-200 dark:border-gray-700 dark:bg-gray-700 rounded-xl p-6 hover:shadow-md transition-all duration-300">
-                    <div class="flex items-start justify-between mb-3">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Portafolio Web</h3>
-                        <span class="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 text-xs px-2 py-1 rounded-full">HTML/CSS</span>
-                    </div>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm mb-4">
-                        Este mismo portafolio desarrollado con Tailwind CSS.
-                    </p>
-                    <div class="flex space-x-3">
-                        <a href="https://github.com/Evergaster/Evergaster.github.io" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium">Ver código</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <dl class="cifras">
+      <div><dt>Crates en el shell</dt><dd>19</dd></div>
+      <div><dt>Líneas de Rust</dt><dd>13 491</dd></div>
+      <div><dt>Pruebas verdes</dt><dd>145</dd></div>
+      <div><dt>Proyectos</dt><dd>11</dd></div>
+    </dl>
+  </section>
 
-        <!-- Tecnologías -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span class="mr-3">⚡</span>
-                Tecnologías
-            </h2>
-            <div class="flex flex-wrap gap-3">
-                <span class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-3 py-2 rounded-lg text-sm font-medium">JavaScript</span>
-                <span class="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-3 py-2 rounded-lg text-sm font-medium">Python</span>
-                <span class="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-3 py-2 rounded-lg text-sm font-medium">C#</span>
-                <span class="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-3 py-2 rounded-lg text-sm font-medium">HTML/CSS</span>
-                <span class="bg-cyan-100 dark:bg-cyan-900 text-cyan-800 dark:text-cyan-200 px-3 py-2 rounded-lg text-sm font-medium">Tailwind CSS</span>
-            </div>
-        </div>
-        <!-- Contacto -->
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <span class="mr-3">📫</span>
-                Contacto
-            </h2>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">Puedes contactarme a través de mis redes sociales:</p>
-            
-            <div class="flex flex-wrap gap-4">
-                <!-- GitHub -->
-                <a href="https://github.com/Evergaster" 
-                   class="flex items-center px-4 py-2 bg-gray-800 hover:bg-transparent text-white hover:text-gray-800 dark:hover:text-gray-300 border-2 border-gray-800 dark:border-gray-300 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-gray-800/50 dark:hover:shadow-gray-300/50 group">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0C5.374 0 0 5.373 0 12 0 17.302 3.438 21.8 8.207 23.387c.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    GitHub
-                </a>
-
-                <!-- LinkedIn -->
-                <a href="https://www.linkedin.com/in/everardo-garcia-romero-8599b8293/" 
-                   class="flex items-center px-4 py-2 bg-blue-600 hover:bg-transparent text-white hover:text-blue-600 border-2 border-blue-600 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-blue-600/50 group">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                    LinkedIn
-                </a>
-            </div>
-        </div>
-    </div>
+  <!-- TRABAJO -->
+  <section class="seccion" id="trabajo" aria-labelledby="t-trabajo">
+    <div class="seccion-cabecera">
+      <p class="mono seccion-num">01 / Trabajo</p>
+      <h2 id="t-trabajo">Once proyectos, todos con su informe</h2>
+      <p class="seccion-nota">
+        Cada ficha dice qué funciona, qué no y por qué se eligió así. Los números salen del
+        código, no de una diapositiva.
+      </p>
     </div>
 
+    <div class="filtros" role="group" aria-label="Filtrar proyectos por tipo">
+      <button class="chip" type="button" data-filtro="todos" aria-pressed="true">Todos <span class="mono">11</span></button>
+      <button class="chip" type="button" data-filtro="sistemas" aria-pressed="false">Sistemas <span class="mono">1</span></button>
+      <button class="chip" type="button" data-filtro="apps" aria-pressed="false">Aplicaciones <span class="mono">4</span></button>
+      <button class="chip" type="button" data-filtro="graficos" aria-pressed="false">Gráficos <span class="mono">1</span></button>
+      <button class="chip" type="button" data-filtro="herramientas" aria-pressed="false">Herramientas <span class="mono">5</span></button>
+      <p class="mono filtros-estado" id="filtros-estado" aria-live="polite">11 proyectos visibles</p>
+    </div>
 
+    <div class="rejilla" id="rejilla">
+
+      <!-- 1 · nd-shell -->
+      <article class="tarjeta revelar" data-cat="sistemas" data-project="nd-shell">
+        <div class="tarjeta-media">
+          <img src="assets/img/nd-shell.webp" alt="Render del diseño del shell: barra superior, isla de búsqueda y panel de control sobre el escritorio" width="1600" height="900" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Sistemas · Rust</p>
+          <h3 class="tarjeta-titulo">nd-shell</h3>
+          <p class="tarjeta-desc">Nueve superficies en un solo daemon: barra por monitor, isla, overview, centro de control, OSD, dock, widgets, notificaciones y ajustes.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">v1 cerrada · 145 pruebas</span>
+            <button class="mas" type="button" data-project="nd-shell" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 2 · Umbriel Shaders -->
+      <article class="tarjeta revelar" data-cat="apps" data-project="umbriel-shaders">
+        <div class="tarjeta-media">
+          <img src="assets/img/umbriel-shaders.webp" alt="Biblioteca de Umbriel Shaders con la rejilla de shaders y su previsualización" width="1400" height="875" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Apps de escritorio · Tauri</p>
+          <h3 class="tarjeta-titulo">Umbriel Shaders</h3>
+          <p class="tarjeta-desc">Biblioteca local de shaders para el compositor Umbriel: explora, previsualiza en WebGL y aplica el efecto sin editar <code>config.toml</code> a mano.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · 0.1.0 MIT</span>
+            <button class="mas" type="button" data-project="umbriel-shaders" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 3 · l2d-viewer -->
+      <article class="tarjeta revelar" data-cat="graficos" data-project="l2d-viewer">
+        <div class="tarjeta-media">
+          <img src="assets/img/l2d-editor.webp" alt="Editor del visor Live2D: el modelo Hiyori completo y el panel de capas y parámetros" width="780" height="437" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Gráficos · Rust</p>
+          <h3 class="tarjeta-titulo">l2d-viewer</h3>
+          <p class="tarjeta-desc">Lector de <code>.moc3</code> y visor de modelos Live2D escritos desde cero en Rust, con rasterizador propio. No es un port del editor.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">En curso · fase 2</span>
+            <button class="mas" type="button" data-project="l2d-viewer" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+      <article class="tarjeta revelar" data-cat="apps" data-project="retro-smartbike">
+        <div class="tarjeta-media">
+          <img src="assets/img/retro-smartbike.webp" alt="Pantalla de inicio de sesión de la app RetroMoto ejecutándose en un emulador Android" width="1080" height="675" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Aplicaciones · Android</p>
+          <h3 class="tarjeta-titulo">retro-smartbike</h3>
+          <p class="tarjeta-desc">App Android para gestionar una moto: telemetría en vivo, encendido remoto, GPS sobre OpenStreetMap y mantenimiento predictivo, con un ESP32 detrás.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · 4 030 líneas</span>
+            <button class="mas" type="button" data-project="retro-smartbike" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+      <article class="tarjeta revelar" data-cat="apps" data-project="komorebi">
+        <div class="tarjeta-media">
+          <img src="assets/img/komorebi.webp" alt="Interfaz de Komorebi: ajustes por monitor y la galería con cuatro fondos animados" width="936" height="585" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Aplicaciones · Wayland</p>
+          <h3 class="tarjeta-titulo">Komorebi</h3>
+          <p class="tarjeta-desc">Gestor de fondos animados para Wayland: un video por monitor, pausa cuando hay ventanas maximizadas y se apaga solo si estás con batería.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · ★1</span>
+            <button class="mas" type="button" data-project="komorebi" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 4 · hilo -->
+      <article class="tarjeta revelar" data-cat="herramientas" data-project="hilo">
+        <div class="tarjeta-media">
+          <img src="assets/img/hilo.webp" alt="Informe HTML de hilo: métricas del día, resumen narrativo, línea de tiempo de 24 horas y bloques de trabajo" width="1400" height="1000" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Herramientas · Python</p>
+          <h3 class="tarjeta-titulo">hilo</h3>
+          <p class="tarjeta-desc">Reconstruye tu día con lo que la máquina ya deja (archivos tocados, commits, comandos) y lo dibuja como bloques de trabajo.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Prototipo · 17 pruebas</span>
+            <button class="mas" type="button" data-project="hilo" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5 · openNothing -->
+      <article class="tarjeta revelar" data-cat="herramientas" data-project="openNothing">
+        <div class="tarjeta-media">
+          <div class="placa" aria-hidden="true">
+            <p class="placa-linea">$ opennothing anc transparencia</p>
+            <p class="placa-linea">$ opennothing eq-custom -4 0 3 5 4 0 -2 -5</p>
+            <p class="placa-linea">1 747 líneas · 53 pruebas</p>
+            <p class="placa-linea placa-ok">SPP/RFCOMM · sin dependencias</p>
+          </div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Herramientas · Python</p>
+          <h3 class="tarjeta-titulo">openNothing</h3>
+          <p class="tarjeta-desc">Controla los audífonos Nothing/CMF desde la terminal por Bluetooth Classic: ANC, EQ de 8 bandas y audio espacial, con cada escritura verificada de vuelta.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · 53 pruebas</span>
+            <button class="mas" type="button" data-project="openNothing" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+      <article class="tarjeta revelar" data-cat="herramientas" data-project="poisson">
+        <div class="tarjeta-media">
+          <div class="placa placa-terminal" aria-hidden="true">
+            <p class="placa-linea">$ cargo run</p>
+            <p class="placa-linea">1. valor de lambda</p>
+            <p class="placa-linea">2. valor de x</p>
+            <p class="placa-linea">λ = 2.5 · x = 3</p>
+            <p class="placa-linea placa-ok">P(X=3) = 0.2138 · 21.39 %</p>
+          </div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Herramientas · Rust</p>
+          <h3 class="tarjeta-titulo">Poisson en Rust</h3>
+          <p class="tarjeta-desc">La distribución de Poisson en 99 líneas de Rust, sin dependencias: λ y n por teclado, la fórmula a la vista y el resultado con su factorial calculado a mano.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · cero deps</span>
+            <button class="mas" type="button" data-project="poisson" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+<!-- 8 · Plugins -->
+      <article class="tarjeta revelar" data-cat="apps" data-project="plugins">
+        <div class="tarjeta-media">
+          <div class="placa" aria-hidden="true">
+            <p class="placa-linea">evergaster/wlmirror</p>
+            <p class="placa-linea">evergaster/opennothing</p>
+            <p class="placa-linea">evergaster/blobatar</p>
+            <p class="placa-linea placa-ok">+ 5 plugins · 44 commits</p>
+          </div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Apps de escritorio · QML</p>
+          <h3 class="tarjeta-titulo">Plugins de Noctalia</h3>
+          <p class="tarjeta-desc">Ocho plugins para el escritorio: espejo de pantalla, control de audífonos Nothing, mascota que sigue tu temporizador, batería, reloj y clima.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Publicado · MIT</span>
+            <button class="mas" type="button" data-project="plugins" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 9 · startpage -->
+      <article class="tarjeta revelar" data-cat="herramientas" data-project="startpage">
+        <div class="tarjeta-media">
+          <img src="assets/img/startpage.webp" alt="Página de inicio minimalista con saludo, hora y enlaces, en tema oscuro" width="1400" height="787" loading="lazy" decoding="async">
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Herramientas · CSS</p>
+          <h3 class="tarjeta-titulo">startpage</h3>
+          <p class="tarjeta-desc">Página de inicio que toma los colores de la paleta activa del escritorio: la plantilla escribe las variables y la página cambia sola.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">En uso diario</span>
+            <button class="mas" type="button" data-project="startpage" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+<!-- 11 · carrito -->
+      <article class="tarjeta revelar" data-cat="herramientas" data-project="carrito">
+        <div class="tarjeta-media">
+          <div class="placa placa-terminal" aria-hidden="true">
+            <p class="placa-linea">$ node examples/checkout.ts</p>
+            <p class="placa-linea">Items: 3</p>
+            <p class="placa-linea">Subtotal: $25.00</p>
+            <p class="placa-linea">Discount (10%) -$2.50</p>
+            <p class="placa-linea">Tax (8%) $2.00</p>
+            <p class="placa-linea placa-ok">Total: $24.50</p>
+          </div>
+        </div>
+        <div class="tarjeta-cuerpo">
+          <p class="mono tarjeta-tipo">Herramientas · TypeScript</p>
+          <h3 class="tarjeta-titulo">carrito-compras</h3>
+          <p class="tarjeta-desc">Ejercicio de Clean Code, SOLID y TDD con reglas de negocio componibles, cero dependencias y pruebas que se corren sin instalar nada.</p>
+          <div class="tarjeta-pie">
+            <span class="estado">Ejemplo · Node 24</span>
+            <button class="mas" type="button" data-project="carrito" aria-haspopup="dialog">Ver ficha <span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- CÓDIGO ABIERTO -->
+  <section class="seccion" id="abierto" aria-labelledby="t-abierto">
+    <div class="seccion-cabecera">
+      <p class="mono seccion-num">02 / Código abierto</p>
+      <h2 id="t-abierto">Lo que mandé fuera de mi máquina</h2>
+      <p class="seccion-nota">Reportes con causa raíz encontrada, no capturas de pantalla. Y empaquetado que compila en cuatro distros.</p>
+    </div>
+
+    <ul class="aportes">
+      <li class="aporte">
+        <p class="mono aporte-fecha">2026-11</p>
+        <div>
+          <h3><a href="https://github.com/pankaspe/nordend-fm/issues/23">pankaspe/nordend-fm — issue #23</a></h3>
+          <p>Los AppImage no arrancaban y el <code>u+x</code> no era la causa: el runtime de AppImage es un <em>static-PIE sin <code>PT_INTERP</code></em> y la comprobación de contenido lo tomaba por biblioteca. Dejé la cadena completa y el parche propuesto, verificado en los cuatro AppImage del equipo.</p>
+        </div>
+      </li>
+      <li class="aporte">
+        <p class="mono aporte-fecha">2026-11</p>
+        <div>
+          <h3><a href="https://github.com/UniversalRepository/packages/pulls">UniversalRepository/packages — PR #13, #16, #17</a></h3>
+          <p>Actualizaciones del compositor Umbriel y su portal para los paquetes de Void: dos commits por plantilla, checksums descargados y verificados, y CI en verde en Alpine, Arch, Chimera y Void.</p>
+        </div>
+      </li>
+      <li class="aporte">
+        <p class="mono aporte-fecha">2026-11</p>
+        <div>
+          <h3><a href="https://github.com/pankaspe/nordend-fm/issues/17">pankaspe/nordend-fm — issue #17</a></h3>
+          <p>Un toggle de «ejecutar como programa» que faltaba: fundamentado línea por línea en el código real (<code>browser.cpp</code>, <code>info_pane.cpp</code>, <code>launcher.hpp</code>), con la entrada de menú contextual incluida.</p>
+        </div>
+      </li>
+      <li class="aporte">
+        <p class="mono aporte-fecha">2026-10</p>
+        <div>
+          <h3><a href="https://github.com/Evergaster/personal_plugins">Evergaster/personal_plugins</a></h3>
+          <p>Ocho plugins publicados con su <code>catalog.toml</code> e ids estables, licencia MIT. El espejo de pantalla y el control de audífonos Nothing son los que más uso.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- MÉTODO -->
+  <section class="seccion seccion-metodo" id="metodo" aria-labelledby="t-metodo">
+    <div class="seccion-cabecera">
+      <p class="mono seccion-num">03 / Método</p>
+      <h2 id="t-metodo">Reproducir, medir, arreglar, escribir</h2>
+    </div>
+
+    <div class="metodo">
+      <div class="metodo-texto">
+        <p>
+          Todos los proyectos de arriba comparten la misma regla: <strong>nada se documenta sin
+          evidencia</strong>. Si digo que la barra lee el 82 % de brillo, lo leí de <code>sysfs</code>
+          y lo comparé con la captura. Si el volumen del panel dice 58 %, <code>wpctl</code> dice 58 %.
+        </p>
+        <p>
+          Cuando algo no se puede resolver, se reporta. El selector de brillo externo por DDC/CI tarda
+          100–300 ms por escritura, así que aplica al soltar y no al arrastrar; el overview no agrupa
+          ventanas por workspace porque ningún protocolo dice en qué workspace vive cada una. Eso está
+          escrito en el código, no escondido.
+        </p>
+        <p>
+          Estudio ingeniería en México. Mantengo este escritorio (Wayland, compositor Umbriel y un shell propio)
+          porque es la única forma de encontrar los errores que de verdad importan.
+        </p>
+      </div>
+
+      <div class="metodo-stack">
+        <h3 class="mono">Herramientas</h3>
+        <ul class="stack">
+          <li>Rust</li><li>C++20</li><li>TypeScript</li><li>Python</li><li>QML</li>
+          <li>GLSL / WebGL</li><li>iced</li><li>egui</li><li>Tauri 2</li><li>wgpu</li>
+          <li>wlr-layer-shell</li><li>Wayland</li><li>D-Bus / zbus</li><li>OpenGL ES</li>
+          <li>CMake</li><li>xbps-src</li><li>GNU/Linux</li><li>git</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="seccion seccion-contacto" id="contacto" aria-labelledby="t-contacto">
+    <div class="seccion-cabecera">
+      <p class="mono seccion-num">04 / Contacto</p>
+      <h2 id="t-contacto">Si algo de esto te sirve, escríbeme</h2>
+      <p class="seccion-nota">
+        Abierto a colaborar en herramientas de escritorio, Rust, Wayland y gráficos.
+        También acepto preguntas sobre cualquier informe: todos los límites están escritos.
+      </p>
+    </div>
+    <div class="contacto-lineas">
+      <a class="contacto-linea" href="mailto:garciaromeroeverardo38@proton.me">
+        <span class="mono">Correo</span>
+        <span class="contacto-valor">garciaromeroeverardo38@proton.me</span>
+      </a>
+      <a class="contacto-linea" href="https://github.com/Evergaster">
+        <span class="mono">GitHub</span>
+        <span class="contacto-valor">github.com/Evergaster</span>
+      </a>
+      <a class="contacto-linea" href="#trabajo">
+        <span class="mono">Trabajo</span>
+        <span class="contacto-valor">Volver a los once proyectos</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pie">
+  <p class="mono">Everardo García Romero · 2026</p>
+  <p class="mono">Hecho a mano en HTML, CSS y JavaScript. Tres archivos y ninguna dependencia que descargar.</p>
+</footer>
+
+<!-- FICHAS -->
+<dialog id="ficha" closedby="any" aria-labelledby="ficha-titulo">
+  <div class="ficha-cabecera">
+    <span class="mono" id="ficha-kicker">Ficha</span>
+    <form method="dialog">
+      <button class="cerrar" value="cerrar" autofocus>Cerrar <span aria-hidden="true">✕</span></button>
+    </form>
+  </div>
+  <div class="ficha-contenido" id="ficha-contenido"></div>
+</dialog>
+
+<template id="ficha-nd-shell">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/nd-shell-full.webp" alt="Pantalla completa del diseño del shell con barra, widgets de escritorio e isla de búsqueda" width="1600" height="900" loading="lazy" decoding="async">
+      <figcaption>Render del diseño de las nueve superficies. El shell real corre sobre <code>wlr-layer-shell</code>, no en el navegador.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Sistemas · Rust · Wayland</p>
+      <h2>nd-shell: un escritorio entero en un daemon</h2>
+      <p class="ficha-lead">Nueve superficies que sustituyen barra, launcher, overview, panel de control, OSD, dock, widgets, notificaciones y ajustes. Un solo proceso, un socket Unix para gobernarlo y cero GTK.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>19 crates, 13 491 líneas de Rust y 145 pruebas verdes al cerrar la v1.</li>
+        <li>La barra se arma desde <code>config.toml</code> y se recarga por inotify: los cambios se ven en menos de un segundo, sin reiniciar.</li>
+        <li>Ajustes edita el archivo con <code>toml_edit</code>, así que conserva comentarios y claves ajenas byte a byte en vez de destruir la config.</li>
+        <li>Un pánico de <code>wgpu</code> al crear una superficie ya no deja el escritorio sin barra: se reintenta hasta tres veces y, si se rinde, sale con código 1 para que un supervisor lo vea.</li>
+        <li>El dock empareja ventanas con apps por trozos (<code>firefox</code> ↔ <code>org.mozilla.firefox</code>) y tiene pruebas de lo que <em>no</em> debe coincidir.</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>Acciones e iconos en las notificaciones, menús por salida sin foco y el motor de título por ventana (Umbriel no publica qué ventana está activa, así que ahí no dibuja nada en vez de mentir).</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Diseño y desarrollo completo</dd></div>
+        <div><dt>Stack</dt><dd>Rust, iced 0.14, iced_layershell, wayland-client, zbus</dd></div>
+        <div><dt>Estado</dt><dd>v1 cerrada · 145 pruebas</dd></div>
+        <div><dt>Código</dt><dd>Repositorio local, sin publicar</dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-umbriel-shaders">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/umbriel-shaders.webp" alt="Ventana de Umbriel Shaders con la biblioteca de efectos y la previsualización" width="1400" height="875" loading="lazy" decoding="async">
+      <figcaption>La biblioteca real, con el catálogo de la comunidad descargado y la previsualización en WebGL.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Apps de escritorio · Tauri 2 · WebGL</p>
+      <h2>Umbriel Shaders: efectos sin tocar el TOML</h2>
+      <p class="ficha-lead">Una app de escritorio para explorar los shaders del compositor Umbriel, verlos antes de aplicarlos y colocarlos en sus slots. Sin editar <code>config.toml</code> a mano y sin romper la configuración.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>Edita solo el bloque del slot elegido: comentarios, claves ajenas y presets quedan idénticos byte a byte.</li>
+        <li>Antes de dar el cambio por bueno se valida con <code>umbriel config validate</code>; si el compositor no lo acepta, la app deshace sola.</li>
+        <li>Deshacer devuelve los bytes exactos anteriores y «restaurar original» lo hace con todos los cambios registrados.</li>
+        <li>El cambio se ve en vivo porque Umbriel vigila sus archivos: no hace falta <code>config-replace</code> ni reiniciar la sesión.</li>
+        <li>Instalador sin sudo que compila si hace falta y deja binario, iconos y entrada de menú en <code>~/.local</code> (Void, Arch, Debian).</li>
+      </ul>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Diseño, desarrollo y empaquetado</dd></div>
+        <div><dt>Stack</dt><dd>Tauri 2, Rust, WebGL, WebKitGTK</dd></div>
+        <div><dt>Medida</dt><dd>2 338 líneas de Rust · 12 pruebas</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/umbriel-shaders-app">github.com/Evergaster/umbriel-shaders-app</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-l2d-viewer">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/l2d-editor.webp" alt="Editor del visor Live2D: el modelo Hiyori dibujado completo, la lista de capas y el panel de parámetros" width="780" height="437" loading="lazy" decoding="async">
+      <figcaption>El editor sobre el modelo real: el dibujo completo por capas a la izquierda y el panel de capas y parámetros a la derecha.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Gráficos · Rust · formatos binarios</p>
+      <h2>l2d-viewer: leer Live2D desde cero</h2>
+      <p class="ficha-lead">Una implementación independiente del formato y del comportamiento de Live2D, escrita en Rust. No es un port: no contiene una línea del editor original.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>El lector del <code>.moc3</code> coincide con <code>py-moc3</code> en ids, conteos y offsets sobre los ocho modelos de muestra del SDK.</li>
+        <li>La tabla real de secciones está en <code>0x40</code>, sin relleno: la spec comunitaria (0x2C0 + relleno) no servía contra los archivos reales.</li>
+        <li>Rasterizador propio en CPU con UV corregida, máscaras por esténcil y tres modos de mezcla. Wanko 399 triángulos, Hiyori 3 356.</li>
+        <li>Editor con 70 sliders, edición de vértices con deshacer, claves, timeline, panel de capas y exportación de animación.</li>
+        <li>Los cuatro brazos resueltos como variantes excluyentes: se oculta la variante B por defecto, no se dibujan encima.</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>El motor de keyforms completo (el índice es un radix mixto sobre bandas y ninguna de las tres fórmulas probadas acierta en todas las mallas) y los deformadores. Está documentado con precisión en <code>docs/</code>.</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Investigación de formato y desarrollo</dd></div>
+        <div><dt>Stack</dt><dd>Rust (moc3, model3, raster) + CLI <code>l2d</code></dd></div>
+        <div><dt>Medida</dt><dd>2 327 líneas · 12 pruebas</dd></div>
+        <div><dt>Estado</dt><dd>Fase 2 en curso</dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-hilo">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/hilo.webp" alt="Informe de hilo con métricas, resumen narrativo, línea de tiempo del día y bloques de trabajo" width="1400" height="1000" loading="lazy" decoding="async">
+      <figcaption>El informe HTML que genera <code>hilo</code> con datos reales de un día: 3 bloques, 1.6 h activas, 78 archivos.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Herramientas · Python · local-first</p>
+      <h2>hilo: el día reconstruido con lo que ya existe</h2>
+      <p class="ficha-lead">Un prototipo que arma la historia de tu jornada a partir de las señales que la máquina ya deja: archivos tocados, commits y comandos. Todo queda en un SQLite local, con la stdlib y nada más.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>17 pruebas verdes sobre la recolección, el agrupado en bloques y el cálculo de minutos activos.</li>
+        <li>Todo vive en <code>~/.local/share/hilo/hilo.db</code> (SQLite y la stdlib): el dato no sale de la máquina.</li>
+        <li>Tres salidas reales: TUI, informe HTML y servidor local. Un watcher lo actualiza cada cinco minutos.</li>
+        <li>Detecta también lo incómodo: 78 archivos tocados, 2.6 GB movidos y commits sin hacer en el resumen.</li>
+      </ul>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Diseño y desarrollo</dd></div>
+        <div><dt>Stack</dt><dd>Python, SQLite, stdlib</dd></div>
+        <div><dt>Estado</dt><dd>Prototipo funcional</dd></div>
+        <div><dt>Comandos</dt><dd><code>hilo today</code> · <code>hilo serve</code> · <code>hilo demo</code></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-plugins">
+  <div class="ficha">
+    <div class="ficha-figura ficha-figura-placa" aria-hidden="true">
+      <div class="placa placa-grande">
+        <p class="placa-linea">evergaster/wlmirror 1.2.3</p>
+        <p class="placa-linea">evergaster/opennothing 1.0.0</p>
+        <p class="placa-linea">evergaster/blobatar 0.1.0</p>
+        <p class="placa-linea">nothing-battery · clock · weather</p>
+        <p class="placa-linea">magnifier · calendar</p>
+        <p class="placa-linea placa-ok">plugin_api 3 → 24 · MIT</p>
+      </div>
+    </div>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Apps de escritorio · QML · plugins</p>
+      <h2>Plugins de Noctalia: ocho piezas para el escritorio</h2>
+      <p class="ficha-lead">Un repositorio con ocho plugins para Noctalia, publicados con ids estables y catálogo propio: del espejo de pantalla al control de audífonos Nothing.</p>
+      <h3>Qué hay</h3>
+      <ul>
+        <li>WL Mirror espeja salidas o ventanas con <code>wl-mirror</code> desde un widget de la barra.</li>
+        <li>Nothing Buds controla ANC, graves, baja latencia, audio espacial, EQ y batería por la CLI <code>opennothing</code>.</li>
+        <li>Blobatar es una mascota cuya expresión sigue tu temporizador de foco, la batería, CPU, RAM y no molestar.</li>
+        <li>Batería, reloj, calendario, clima y una lupa: cinco más que uso a diario.</li>
+        <li>44 commits, licencia MIT y <code>catalog.toml</code> para que el gestor de plugins los lea sin rutas frágiles.</li>
+      </ul>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Desarrollo y publicación</dd></div>
+        <div><dt>Stack</dt><dd>QML, plugin_api 3–24, Rust y CLI del sistema</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/personal_plugins">github.com/Evergaster/personal_plugins</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-startpage">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/startpage.webp" alt="Página de inicio con saludo, reloj y enlaces con tipografía pixel" width="1400" height="787" loading="lazy" decoding="async">
+      <figcaption>El tema oscuro de la página, con los colores que genera la plantilla del escritorio.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Herramientas · HTML · CSS</p>
+      <h2>startpage: la paleta del escritorio, en el navegador</h2>
+      <p class="ficha-lead">Una página de inicio minimalista que hereda los colores de la paleta activa de Noctalia. Cuando cambias de tema en el escritorio, la página cambia sola.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>La plantilla del escritorio escribe <code>colors.css</code>; la página solo consume variables. Cero JavaScript para el tema.</li>
+        <li>Tipografía pixel Departure Mono con licencia OFL, servida local: sin CDN ni fuentes de red.</li>
+        <li>Verificada en claro y oscuro, con capturas de ambos estados en el repositorio.</li>
+        <li>Estructura de un archivo editable: enlaces, textos y orden se cambian en el HTML, nada más.</li>
+      </ul>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Diseño y desarrollo</dd></div>
+        <div><dt>Stack</dt><dd>HTML, CSS, plantillas de Noctalia</dd></div>
+        <div><dt>Estado</dt><dd>En uso diario</dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-carrito">
+  <div class="ficha">
+    <div class="ficha-figura ficha-figura-placa" aria-hidden="true">
+      <div class="placa placa-grande placa-terminal">
+        <p class="placa-linea">$ node examples/checkout.ts</p>
+        <p class="placa-linea">Items: 3</p>
+        <p class="placa-linea">Subtotal: $25.00</p>
+        <p class="placa-linea">Discount (10%) -$2.50</p>
+        <p class="placa-linea">Tax (8%) $2.00</p>
+        <p class="placa-linea placa-ok">Total: $24.50</p>
+        <p class="placa-linea">$ npm test → suite verde</p>
+      </div>
+    </div>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Herramientas · TypeScript · TDD</p>
+      <h2>carrito-compras: reglas de negocio componibles</h2>
+      <p class="ficha-lead">Un ejercicio deliberado de Clean Code, SOLID y TDD: un carrito que calcula su precio final con descuentos e impuestos componibles, sin dependencias.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>Corre con Node 24 sin instalar nada: el cargador ejecuta TypeScript directamente (<em>type stripping</em>).</li>
+        <li>Suite con <code>node:test</code> y modo watch; el ejemplo imprime el desglose completo del checkout.</li>
+        <li>Las reglas se combinan en vez de encadenarse a golpe de <code>if</code>: cada descuento e impuesto es una pieza aparte.</li>
+        <li>Sirve para lo que fue: mantener el hábito de escribir la prueba antes que la regla.</li>
+      </ul>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Ejercicio de diseño y pruebas</dd></div>
+        <div><dt>Stack</dt><dd>TypeScript, Node 24, node:test</dd></div>
+        <div><dt>Comandos</dt><dd><code>node examples/checkout.ts</code> · <code>npm test</code></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+
+<template id="ficha-openNothing">
+  <div class="ficha">
+    <div class="ficha-figura ficha-figura-placa" aria-hidden="true">
+      <div class="placa placa-grande placa-terminal">
+        <p class="placa-linea">$ opennothing status</p>
+        <p class="placa-linea">CMF Buds Pro 2 · B172 · espeon</p>
+        <p class="placa-linea">anc: transparencia</p>
+        <p class="placa-linea">eq-custom -4 0 3 5 4 0 -2 -5</p>
+        <p class="placa-linea">low-latency on · spatial-audio on</p>
+        <p class="placa-linea placa-ok">ack + readback en cada escritura</p>
+      </div>
+    </div>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Herramientas · Python · Bluetooth</p>
+      <h2>openNothing: los audífonos sin la app oficial</h2>
+      <p class="ficha-lead">Controla tus audífonos Nothing/CMF desde la terminal hablando directo por Bluetooth Classic (SPP/RFCOMM), sin nube y con el teléfono fuera del camino.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>1 747 líneas de Python y 53 pruebas, con <strong>cero dependencias externas</strong>: solo la biblioteca estándar.</li>
+        <li>Cada escritura se confirma con <code>ack</code> y se vuelve a leer (<em>readback</em>): si el ajuste no se aplicó, lo sabes.</li>
+        <li>Nueve subcomandos: ANC con seis modos, baja latencia, refuerzo de graves con nivel 0–10, audio espacial con <em>head tracking</em>, cinco presets de EQ y uno propio de ocho bandas, diagnóstico y escucha de eventos del dispositivo.</li>
+        <li>Arquitectura por capas con un <code>ScriptedTransport</code>: el protocolo y la sesión se prueban sin Bluetooth ni hardware.</li>
+        <li>Validado en equipo real: CMF Buds Pro 2 (modelo B172, nombre interno <code>espeon</code>).</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>El repositorio declara MIT en <code>pyproject.toml</code> pero todavía no tiene el archivo <code>LICENSE</code>. Y esta ficha no lleva captura porque el CLI no se puede fotografiar sin los audífonos conectados.</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Protocolo, controlador y CLI</dd></div>
+        <div><dt>Stack</dt><dd>Python 3.9+, Bluetooth Classic SPP/RFCOMM, stdlib</dd></div>
+        <div><dt>Medida</dt><dd>1 747 líneas · 53 pruebas</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/openNothing">github.com/Evergaster/openNothing</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+
+<template id="ficha-retro-smartbike">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/retro-smartbike-ficha.webp" alt="Pantalla de inicio de sesión de Smart-Bike con los campos de correo y contraseña y el botón de entrar" width="646" height="1400" loading="lazy" decoding="async">
+      <figcaption>Compilada aquí y corriendo en un emulador Android 17: la pantalla de entrada. El resto de la app pide cuenta en la API y el ESP32 conectado.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Aplicaciones · Android · IoT</p>
+      <h2>retro-smartbike: la moto en el teléfono</h2>
+      <p class="ficha-lead">Una app Android nativa para monitorear y controlar una motocicleta: telemetría, encendido remoto, rastreo GPS y mantenimiento, con un ESP32 como cerebro a bordo.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>4 030 líneas de Kotlin con Clean Architecture, MVVM y repositorios separados: <code>data/</code>, <code>domain/</code>, <code>presentation/</code>.</li>
+        <li>UI en Jetpack Compose con Material 3, tema oscuro y navegación propia por módulos.</li>
+        <li>Telemetría real: velocidad, estado del GPS, voltaje de batería, alarma y última actividad; encendido remoto con detección de punto neutro.</li>
+        <li>Mapa con <strong>osmdroid</strong> sobre OpenStreetMap, sin depender de Google Play Services.</li>
+        <li>Sesión con tokens en <code>EncryptedSharedPreferences</code> (AES-256) y caché offline en Room para funcionar sin red.</li>
+        <li>El hardware no es decorado: GPS por ESP32 con módem celular, y el historial de rutas guarda distancia, duración y velocidad máxima por viaje.</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>No hay APK publicada ni capturas en el repositorio, y sin el ESP32 y la API la app solo llega a la parte offline. Tampoco tiene pruebas automatizadas: la arquitectura está, la red de seguridad todavía no.</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>App completa (arquitectura, UI, red y datos)</dd></div>
+        <div><dt>Stack</dt><dd>Kotlin 2.2, Compose, Retrofit, Room, Supabase, ESP32</dd></div>
+        <div><dt>Medida</dt><dd>4 030 líneas · Android 14+</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/retro-smartbike">github.com/Evergaster/retro-smartbike</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-komorebi">
+  <div class="ficha">
+    <figure class="ficha-figura">
+      <img src="assets/img/komorebi-ficha.webp" alt="Ventana de Komorebi: selección de dos monitores, volumen y velocidad, y la galería de fondos con sus botones Aplicar" width="1400" height="1574" loading="lazy" decoding="async">
+      <figcaption>La interfaz real, capturada de la app: monitores, ajustes por pantalla y galería. Los cuatro fondos son videos de prueba generados con ffmpeg para la captura.</figcaption>
+    </figure>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Aplicaciones · Python · Wayland</p>
+      <h2>Komorebi: video de fondo sin comerse la batería</h2>
+      <p class="ficha-lead">Un gestor de fondos animados para Wayland que pone un video distinto en cada monitor, con bandeja del sistema, biblioteca con miniaturas y frenos para no gastar recursos de más.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>4 398 líneas de Python con GUI en PySide6 y reproducción por libVLC en un servicio de fondo.</li>
+        <li><strong>Multi-monitor con hot-plug</strong>: al desconectar una pantalla, los fondos de las demás siguen sin parpadeos.</li>
+        <li>Se pausa solo cuando hay ventanas maximizadas y cuando detecta batería; el límite de FPS es opcional.</li>
+        <li>Biblioteca que ordena los videos en <code>~/Videos/Komorebi</code> y genera miniaturas con <code>ffmpeg</code>.</li>
+        <li>Volumen independiente y silencio desde la bandeja, sin abrir la ventana.</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>Depende de libVLC, ffmpeg y de <code>xprop</code>/<code>xrandr</code> en Wayland + XWayland, y está probado en GNOME Shell, no en otros compositores. El repositorio todavía no tiene capturas ni pruebas.</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Diseño y desarrollo completo</dd></div>
+        <div><dt>Stack</dt><dd>Python, PySide6, libVLC, ffmpeg, Wayland</dd></div>
+        <div><dt>Medida</dt><dd>4 398 líneas · licencia MIT</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/Komorebi">github.com/Evergaster/Komorebi</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<template id="ficha-poisson">
+  <div class="ficha">
+    <div class="ficha-figura ficha-figura-placa" aria-hidden="true">
+      <div class="placa placa-grande placa-terminal">
+        <p class="placa-linea">$ cargo run</p>
+        <p class="placa-linea">1. agrega el valor de lambda</p>
+        <p class="placa-linea">2. agrega el valor de x</p>
+        <p class="placa-linea">3. mostrar resultado</p>
+        <p class="placa-linea">4. mostrar fórmula</p>
+        <p class="placa-linea placa-ok">P(X=3; λ=2.5) = 0.2138</p>
+      </div>
+    </div>
+    <div class="ficha-texto">
+      <p class="mono ficha-tipo">Herramientas · Rust · matemáticas</p>
+      <h2>Poisson en Rust: la fórmula, sin cajas negras</h2>
+      <p class="ficha-lead">La distribución de Poisson implementada a mano en Rust: λ y n se piden por teclado, el factorial se calcula con un bucle y el resultado sale con su probabilidad en porcentaje.</p>
+      <h3>Qué es real</h3>
+      <ul>
+        <li>99 líneas, edición 2024 y <strong>cero dependencias</strong>: solo la biblioteca estándar.</li>
+        <li>Menú de consola con las cuatro operaciones: cargar λ, cargar x, calcular y mostrar la fórmula.</li>
+        <li>El factorial no viene de una librería: se acumula multiplicando del 1 al n, en <code>f64</code>.</li>
+        <li>Comprobado con el ejemplo del README: λ = 2.5 y x = 3 dan P = 0.2138, o 21.39 %.</li>
+      </ul>
+      <h3>Lo que no está</h3>
+      <p>Es un menú interactivo sin argumentos de línea de comandos y sin pruebas automatizadas. Para λ grandes el factorial en <code>f64</code> se desborda: ahí haría falta log-gamma, y no está.</p>
+      <dl class="ficha-datos">
+        <div><dt>Rol</dt><dd>Implementación y documentación</dd></div>
+        <div><dt>Stack</dt><dd>Rust (edition 2024), stdlib</dd></div>
+        <div><dt>Medida</dt><dd>99 líneas · cero dependencias</dd></div>
+        <div><dt>Enlace</dt><dd><a href="https://github.com/Evergaster/metodo-poisson-en-rust">github.com/Evergaster/metodo-poisson-en-rust</a></dd></div>
+      </dl>
+    </div>
+  </div>
+</template>
+
+<script src="app.js?v=4" defer></script>
 </body>
 </html>
